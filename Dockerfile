@@ -1,15 +1,19 @@
+FROM node:16
 
-# Use an official Node runtime as the parent image
-FROM node:current-alpine3.14 
+# Create app directory
+WORKDIR /usr/src/app
 
-# Set the working directory in the container to /app
-WORKDIR /app
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-# Copy the current directory contents into the container at /app
-ADD . /app
+RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
 
-# Make the container's port 80 available to the outside world
-EXPOSE 3000
+# Bundle app source
+COPY . .
 
-# Run app.js using node when the container launches
-CMD ["node", "index.js"]
+EXPOSE 8080
+CMD [ "node", "index.js" ]
